@@ -7,14 +7,17 @@ use core\Utils;
 use core\RoleUtils;
 use core\ParamUtils;
 use app\forms\LoginForm;
+use app\transfer\User;
 
 class LoginCtrl {
 
     private $form;
+    private $records;
 
     public function __construct() {
         //stworzenie potrzebnych obiektów
         $this->form = new LoginForm();
+        //$this->records = new PersonEditForm();
     }
 
     public function validate() {
@@ -37,12 +40,23 @@ class LoginCtrl {
         if (App::getMessages()->isError())
             return false;
 
-        // sprawdzenie, czy dane logowania poprawne
-        // (takie informacje najczęściej przechowuje się w bazie danych)
-        if ($this->form->login == "admin" && $this->form->pass == "admin") {
-            RoleUtils::addRole('admin');
-        } else if ($this->form->login == "user" && $this->form->pass == "user") {
-            RoleUtils::addRole('user');
+      
+        try {
+            $this->records = App::getDB()->get("users", [
+	"password",
+	"role",], [
+	"username" => $this->form->login]);
+        } catch (\PDOException $e) {
+            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+            if (App::getConf()->debug)
+                Utils::addErrorMessage($e->getMessage());        
+        }        
+        
+        if ($this->records && $this->form->pass == $this->records['password']) {
+        
+        $user = new User($this->form->login, $this->records['role']);
+            $_SESSION['user'] = serialize($user);
+            RoleUtils::addRole($user->role);  
         } else {
             Utils::addErrorMessage('Niepoprawny login lub hasło');
         }
@@ -76,6 +90,8 @@ class LoginCtrl {
         
         App::getSmarty()->assign('page_description','Dodano routing');
         App::getSmarty()->assign('page_header','Logowanie');
+        
+        
 		
         App::getSmarty()->assign('page_title','Strona logowania');
         App::getSmarty()->assign('form', $this->form); // dane formularza do widoku

@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="{$conf->app_url}/css/style.css">	
 </head>
 <body>
+    
+{block name=top} {/block}
 
 <div class="header">
     

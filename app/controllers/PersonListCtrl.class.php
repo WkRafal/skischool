@@ -74,6 +74,7 @@ class PersonListCtrl {
         // 4. wygeneruj widok
         App::getSmarty()->assign('searchForm', $this->form); // dane formularza (wyszukiwania w tym wypadku)
         App::getSmarty()->assign('users', $this->records);  // lista rekordów z bazy danych
+        App::getSmarty()->assign('user',unserialize($_SESSION['user']));
         App::getSmarty()->display('PersonList.tpl');
     }
 
