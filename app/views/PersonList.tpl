@@ -42,11 +42,11 @@
                 <td>{$u["role"]}</td>
                 <td>{$u["email"]}</td>
                 <td>{$u["phone"]}</td>
-{*		<td>
-			<a class="button-small pure-button button-secondary" href="{$conf->action_url}personEdit/{$p['idperson']}">Edytuj</a>
+		<td>
+			<a class="button-small pure-button button-secondary" href="{$conf->action_url}personEdit/{$u['user_id']}">Edytuj</a>
 			&nbsp;
-			<a class="button-small pure-button button-warning" href="{$conf->action_url}personDelete/{$p['idperson']}">Usuń</a>
-		</td>*}
+			<a class="button-small pure-button button-warning" href="{$conf->action_url}personDelete/{$u['user_id']}">Usuń</a>
+		</td>
 	</tr>
 {/strip}
 {/foreach}
