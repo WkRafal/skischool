@@ -23,6 +23,8 @@
 {block name=content} Domyślna treść zawartości .... {/block}
 </div><!-- content -->
 
+{block name=bottom} {/block}
+
 <div class="footer">
 	<p>
 {block name=footer} Domyślna treść stopki .... {/block}
