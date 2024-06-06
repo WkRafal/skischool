@@ -14,13 +14,16 @@ class RegisterCtrl {
 
     private $form;
     private $reppass;
+    private $record;
+   
 
     public function __construct() {
         //stworzenie potrzebnych obiektów
         $this->form = new \app\forms\PersonEditForm();
+        
     }
 
-public function validateSave() {
+public function validate() {
         //0. Pobranie parametrów z walidacją
         $this->form->userName = ParamUtils::getFromRequest('login');
         $this->form->password = ParamUtils::getFromRequest('pass');
@@ -45,40 +48,56 @@ public function validateSave() {
         if (App::getMessages()->isError())
             return false;
 
-
-
-        // 2. sprawdzenie poprawności przekazanych parametrów
-
+        
+        try {
+            $this->record = App::getDB()->get("users", "username", [
+	"username" => $this->form->userName]);
+        } catch (\PDOException $e) {
+            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+            if (App::getConf()->debug)
+                Utils::addErrorMessage($e->getMessage());        
+        }        
+        
+        if ($this->record) {
+            Utils::addErrorMessage('login już istnieje');
+            return false;
+        }
+        
         if ($this->form->password != $this->reppass) {
             Utils::addErrorMessage('hasła się różńią');
+            return false;
        }
-
+       
         return !App::getMessages()->isError();
     }
     
     public function action_newLogin() {
-
-       
-         $this->form->role = 'uczeń';
-         $this->generateView();
+        $user = new User('nowy','uczeń');
+        $_SESSION['user'] = serialize($user);
+        $this->generateView();
         
     }
 
     public function action_register() {
 
         if ($this->validate()) {
-            RoleUtils::addRole('uczeń');
-            Utils::addErrorMessage('Poprawnie wprowadzono login i hasło');
-            App::getRouter()->redirectTo("personNew");
+            
+            $user = new User($this->form->userName,'uczeń');
+            $_SESSION['user'] = serialize($user);
+            RoleUtils::addRole($user->role);
+       
+            $this->form->role = $user->role;
+            Utils::addErrorMessage('Jesteś zarejstrowany uzupełnij dane');
+            $_SESSION['form'] = serialize($this->form);
+            App::getRouter()->redirectTo("registerPerson");
+            //App::getSmarty()->display('PersonEdit.tpl');
         } else {
-            //niezalogowany => pozostań na stronie logowania
+            
             $this->generateView();
         }
          
- 
-    }
-
-    
+     }
+  
 
     public function generateView() {
         
@@ -86,7 +105,7 @@ public function validateSave() {
         App::getSmarty()->assign('page_header','Rejstracja');
         
         
-		
+        App::getSmarty()->assign('user',unserialize($_SESSION['user']));
         App::getSmarty()->assign('page_title','Rejstracja');
         App::getSmarty()->assign('form', $this->form); // dane formularza do widoku
         App::getSmarty()->display('RegisterView.tpl');

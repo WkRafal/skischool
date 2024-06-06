@@ -80,6 +80,14 @@ class PersonEditCtrl {
     public function action_personNew() {
         $this->generateView();
     }
+    
+    public function action_registerPerson() {
+        //SessionUtils::loadObject('form', $keep = false);
+        //App::getSmarty()->assign('form', $this->form);
+        App::getSmarty()->assign('user',unserialize($_SESSION['user']));
+        App::getSmarty()->assign('form',unserialize($_SESSION['form']));
+        App::getSmarty()->display('PersonEdit.tpl');
+    }    
 
     //wysiweltenie rekordu do edycji wskazanego parametrem 'id'
     public function action_personEdit() {
@@ -190,6 +198,8 @@ class PersonEditCtrl {
 
     public function generateView() {
         App::getSmarty()->assign('form', $this->form); // dane formularza dla widoku
+        App::getSmarty()->assign('user',unserialize($_SESSION['user']));
+        //App::getSmarty()->assign('form',unserialize($_SESSION['form']));
         App::getSmarty()->display('PersonEdit.tpl');
     }
 

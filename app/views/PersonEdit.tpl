@@ -1,5 +1,14 @@
 {extends file="main.tpl"}
 
+{block name=top}
+    
+    <div class="pure-menu pure-menu-horizontal bottom-margin">
+	<a href="{$conf->action_url}logout"  class="pure-menu-heading pure-menu-link">wyloguj</a>
+	<span style="float:right;">użytkownik: {$user->login}, rola: {$user->role}</span>
+    </div>
+    
+{/block}
+
 {block name=content}
 
 <div class="bottom-margin">
@@ -18,10 +27,14 @@
             <label for="userName">login</label>
             <input id="userName" type="text" placeholder="login" name="userName" value="{$form->userName}">
         </div>
+        {if $user->role == 'admin'}
                 <div class="pure-control-group">
             <label for="role">rola</label>
             <input id="role" type="text" placeholder="rola" name="role" value="{$form->role}">
         </div>
+        {else}
+            <input type="hidden" name="role" value="{$form->role}">
+        {/if}
                 <div class="pure-control-group">
             <label for="password">hasło</label>
             <input id="password" type="text" placeholder="hasło" name="password" value="{$form->password}">
@@ -40,6 +53,7 @@
 		</div>
 	</fieldset>
     <input type="hidden" name="id" value="{$form->id}">
+
 </form>	
 </div>
 

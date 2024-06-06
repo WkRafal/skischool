@@ -20,7 +20,7 @@
 		</div>
 		<div class="pure-controls">
 			<input type="submit" value="rejstracja" class="pure-button pure-button-primary"/>
-                        
+                        <a class="pure-button button-secondary" href="{$conf->action_root}Login">Logowanie</a>
 		</div>
 	</fieldset>
 </form>	
