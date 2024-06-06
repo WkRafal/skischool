@@ -25,40 +25,37 @@
 
 {block name=bottom}
 
-<div class="bottom-margin">
-<a class="pure-button button-success" href="{$conf->action_root}personNew">+ Nowa osoba</a>
-</div>	
 
-<table id="tab_people" class="pure-table pure-table-bordered">
-<thead>
-	<tr>
-		<th>imię</th>
-		<th>nazwisko</th>
-		<th>login</th>
-                <th>rola</th>
-                <th>email</th>
-                <th>telefon</th>
-		<th>opcje</th>
-	</tr>
-</thead>
-<tbody>
-{foreach $users as $u}
-{strip}
-	<tr>
-		<td>{$u["first_name"]}</td>
-		<td>{$u["last_name"]}</td>
-		<td>{$u["username"]}</td>
-                <td>{$u["role"]}</td>
-                <td>{$u["email"]}</td>
-                <td>{$u["phone"]}</td>
-		<td>
-			<a class="button-small pure-button button-secondary" href="{$conf->action_url}personEdit/{$u['user_id']}">Edytuj</a>
-			&nbsp;
-			<a class="button-small pure-button button-warning" href="{$conf->action_url}personDelete/{$u['user_id']}">Usuń</a>
-		</td>
-	</tr>
-{/strip}
-{/foreach}
+
+<php?
+$days_count = date('t');
+$current_day = date('d');
+$week_day_first = date('N', mktime(0, 0, 0, date('m'), 1, date('Y')));
+?>
+ 
+<table>
+    <tr>
+        <th>MO</th>
+        <th>TU</th>
+        <th>WE</th>
+        <th>TH</th>
+        <th>FR</th>
+        <th style="color: red;">SU</th>
+        <th style="color: red;">SA</th>
+    </tr>
+    <php? for ($w = 1 - $week_day_first + 1; $w <= $days_count; $w = $w + 7): ?>
+        <tr>
+            <php? counter = 0; ?>
+            <php? for ($d = $w; $d <= $w + 6; $d++): ?>
+                <td style="<php? if ($counter > 4): ?>color: red;<php? endif; ?><?php if ($current_day == $d): ?>background-color:yellow; color:green;font-weight:bold;<?php endif; ?>">
+                    <php? echo($d > 0 ? ($d > $days_count ? '' : $d) : '') ?>
+                </td>
+                <php? $counter++; ?>
+            <php? endfor; ?>
+        </tr>
+    <php? endfor; ?>
+</table>
+
 </tbody>
 </table>
 

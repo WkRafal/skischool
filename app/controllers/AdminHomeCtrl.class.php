@@ -8,7 +8,7 @@ use core\ParamUtils;
 use core\Validator;
 use app\forms\PersonEditForm;
 
-class PersonEditCtrl {
+class AdminHomeCtrl {
 
     private $form; //dane formularza
 
@@ -77,7 +77,7 @@ class PersonEditCtrl {
         return !App::getMessages()->isError();
     }
 
-    public function action_personNew() {
+    public function action_adminHome() {
         $this->generateView();
     }
     
@@ -118,8 +118,6 @@ class PersonEditCtrl {
         // 3. Wygenerowanie widoku
         $this->generateView();
     }
-    
-    
 
     public function action_personDelete() {
         // 1. walidacja id osoby do usuniecia
@@ -202,7 +200,7 @@ class PersonEditCtrl {
         App::getSmarty()->assign('form', $this->form); // dane formularza dla widoku
         App::getSmarty()->assign('user',unserialize($_SESSION['user']));
         //App::getSmarty()->assign('form',unserialize($_SESSION['form']));
-        App::getSmarty()->display('PersonEdit.tpl');
+        App::getSmarty()->display('AdminSite.tpl');
     }
 
 }

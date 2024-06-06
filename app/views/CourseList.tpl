@@ -52,36 +52,31 @@
 
 {block name=bottom}
 
-<div class="bottom-margin">
-<a class="pure-button button-success" href="{$conf->action_root}personNew">+ Nowa osoba</a>
-</div>	
 
 <table id="tab_people" class="pure-table pure-table-bordered">
 <thead>
 	<tr>
-		<th>imię</th>
-		<th>nazwisko</th>
-		<th>login</th>
-                <th>rola</th>
-                <th>email</th>
-                <th>telefon</th>
-		<th>opcje</th>
+		<th>kurs</th>
+		<th>poziom</th>
+		<th>Data Rozpoczęcia</th>
+                <th>Data zakończenia</th>
+                <th>kursant</th>
+
 	</tr>
 </thead>
 <tbody>
-{foreach $users as $u}
+{foreach $courses as $u}
 {strip}
 	<tr>
-		<td>{$u["first_name"]}</td>
-		<td>{$u["last_name"]}</td>
-		<td>{$u["username"]}</td>
-                <td>{$u["role"]}</td>
-                <td>{$u["email"]}</td>
-                <td>{$u["phone"]}</td>
-		<td>
-			<a class="button-small pure-button button-secondary" href="{$conf->action_url}personEdit/{$u['user_id']}">Edytuj</a>
+		<td>{$u["name"]}</td>
+		<td>{$u["level"]}</td>
+		<td>{$u["start_date"]}</td>
+                <td>{$u["end_date"]}</td>
+                <td>{$u["user_id"]}</td>
+            		<td>
+			<a class="button-small pure-button button-secondary" href="{$conf->action_url}courseEdit/{$u['course_id']}">Edytuj</a>
 			&nbsp;
-			<a class="button-small pure-button button-warning" href="{$conf->action_url}personDelete/{$u['user_id']}">Usuń</a>
+			<a class="button-small pure-button button-warning" href="{$conf->action_url}courseDelete/{$u['course_id']}">Usuń</a>
 		</td>
 	</tr>
 {/strip}

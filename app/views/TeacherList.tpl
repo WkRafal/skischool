@@ -78,10 +78,13 @@
                 <td>{$u["role"]}</td>
                 <td>{$u["email"]}</td>
                 <td>{$u["phone"]}</td>
+
 		<td>
 			<a class="button-small pure-button button-secondary" href="{$conf->action_url}personEdit/{$u['user_id']}">Edytuj</a>
 			&nbsp;
 			<a class="button-small pure-button button-warning" href="{$conf->action_url}personDelete/{$u['user_id']}">Usuń</a>
+                        &nbsp;
+			<a class="button-small pure-button button-warning" href="{$conf->action_url}addCourse/{$u['user_id']}">Kurs</a>
 		</td>
 	</tr>
 {/strip}

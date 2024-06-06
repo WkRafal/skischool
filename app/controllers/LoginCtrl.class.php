@@ -77,7 +77,7 @@ class LoginCtrl {
             //zalogowany => przekieruj na główną akcję (z przekazaniem messages przez sesję)
             Utils::addErrorMessage('Poprawnie zalogowano do systemu');
             if (RoleUtils::inRole('admin')){
-                App::getRouter()->redirectTo("personList");
+                App::getRouter()->redirectTo("adminHome");
             } else if (RoleUtils::inRole('uczeń')) {
                 App::getRouter()->redirectTo("studentHome");
             } else  {

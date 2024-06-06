@@ -81,5 +81,51 @@ class PersonListCtrl {
         App::getSmarty()->assign('user',unserialize($_SESSION['user']));
         App::getSmarty()->display('PersonList.tpl');
     }
+    
+    public function action_teacherList() {
+
+        $this->validate();
+
+        $search_params = []; //przygotowanie pustej struktury (aby była dostępna nawet gdy nie będzie zawierała wierszy)
+        if (isset($this->form->surname) && strlen($this->form->surname) > 0) {
+            $search_params['last_name[~]'] = $this->form->surname . '%'; // dodanie symbolu % zastępuje dowolny ciąg znaków na końcu
+        }
+        
+        $search_params['role'] = 'instruktor';
+
+        $num_params = sizeof($search_params);
+        if ($num_params > 1) {
+            $where = ["AND" => &$search_params];
+        } else {
+            $where = &$search_params;
+        }
+        //dodanie frazy sortującej po nazwisku
+        $where ["ORDER"] = "last_name";
+        //wykonanie zapytania
+
+        try {
+            $this->records = App::getDB()->select("users", [
+                "user_id",
+                "username",
+                "role",
+                "first_name",
+                "last_name",
+                "email",
+                "phone",
+                    ], $where);
+        } catch (\PDOException $e) {
+            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+            if (App::getConf()->debug)
+                Utils::addErrorMessage($e->getMessage());
+        }
+        
+
+
+        // 4. wygeneruj widok
+        App::getSmarty()->assign('searchForm', $this->form); // dane formularza (wyszukiwania w tym wypadku)
+        App::getSmarty()->assign('users', $this->records);  // lista rekordów z bazy danych
+        App::getSmarty()->assign('user',unserialize($_SESSION['user']));
+        App::getSmarty()->display('TeacherList.tpl');
+    }
 
 }

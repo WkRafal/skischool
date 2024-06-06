@@ -9,8 +9,9 @@
         <link rel="stylesheet" href="{$conf->app_url}/css/styles.css"
 </head>
 <body>
-
-<div id="layout">
+    
+{block name=border} {/block}
+{*<div id="layout">
     <!-- Menu toggle -->
     <a href="#menu" id="menuLink" class="menu-link">
         <!-- Hamburger icon -->
@@ -32,7 +33,7 @@
                 <li class="pure-menu-item"><a href="#contact" class="pure-menu-link">Contact</a></li>
             </ul>
         </div>
-    </div>
+    </div>*}
     
  <div class="header">
     
