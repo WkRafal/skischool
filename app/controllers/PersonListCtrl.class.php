@@ -27,6 +27,10 @@ class PersonListCtrl {
 
         return !App::getMessages()->isError();
     }
+    
+    public function action_home() {
+        App::getSmarty()->display('Home.tpl');
+    }
 
     public function action_personList() {
         // 1. Walidacja danych formularza (z pobraniem)

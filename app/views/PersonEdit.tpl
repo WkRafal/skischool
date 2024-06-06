@@ -29,8 +29,12 @@
         </div>
         {if $user->role == 'admin'}
                 <div class="pure-control-group">
-            <label for="role">rola</label>
-            <input id="role" type="text" placeholder="rola" name="role" value="{$form->role}">
+                <label for="role">Wybierz role:</label>
+                <select id="role" name="role">
+                <option value="admin">admin</option>
+                <option value="uczeń">uczeń</option>
+                <option value="instruktor">instruktor</option>
+                </select>
         </div>
         {else}
             <input type="hidden" name="role" value="{$form->role}">

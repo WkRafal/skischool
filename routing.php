@@ -17,3 +17,4 @@ Utils::addRoute('personDelete',  'PersonEditCtrl',	['admin']);
 Utils::addRoute('newLogin',      'RegisterCtrl');
 Utils::addRoute('register',      'RegisterCtrl');
 Utils::addRoute('registerPerson','PersonEditCtrl');
+Utils::addRoute('studentHome',   'StudentHomeCtrl');
