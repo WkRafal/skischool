@@ -72,7 +72,7 @@ public function validate() {
     }
     
     public function action_newLogin() {
-        $user = new User('nowy','uczeń');
+        $user = new User();
         $_SESSION['user'] = serialize($user);
         $this->generateView();
         

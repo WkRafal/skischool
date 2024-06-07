@@ -7,29 +7,31 @@ use core\Utils;
 use core\ParamUtils;
 use core\Validator;
 use app\forms\EnrollmentEditForm;
+use app\transfer\User; 
 
 
 class EnrollmentEditCtrl {
 
     private $form; //dane formularz
     private $record;
+    private $user;
 
     public function __construct() {
         //stworzenie potrzebnych obiektów
         $this->form = new EnrollmentEditForm();
-        
+        $this->user = new User();
     }
+    
 
     // Walidacja danych przed zapisem (nowe dane lub edycja).
     public function validateSave() {
         //0. Pobranie parametrów z walidacją
         $this->form->id = ParamUtils::getFromRequest('id', true, 'Błędne wywołanie aplikacji');
-        $this->form->name = ParamUtils::getFromRequest('nazwa', true, 'Błędne wywołanie aplikacji');
-        $this->form->level = ParamUtils::getFromRequest('level', true, 'Błędne wywołanie aplikacji');
-        $this->form->startDate = ParamUtils::getFromRequest('startDate', true, 'Błędne wywołanie aplikacji');
-        $this->form->endDate = ParamUtils::getFromRequest('endDate', true, 'Błędne wywołanie aplikacji');
-        $this->form->teacher = ParamUtils::getFromRequest('teacher', true, 'Błędne wywołanie aplikacji');
-
+        $this->form->price = ParamUtils::getFromRequest('price', true, 'Błędne wywołanie aplikacji');
+        $this->form->status = ParamUtils::getFromRequest('status', true, 'Błędne wywołanie aplikacji');
+        $this->form->course = ParamUtils::getFromRequest('course', true, 'Błędne wywołanie aplikacji');
+        $this->form->student = ParamUtils::getFromRequest('student', true, 'Błędne wywołanie aplikacji');
+       
         if (App::getMessages()->isError())
             return false;
 
@@ -67,67 +69,58 @@ class EnrollmentEditCtrl {
     }   
     
     public function action_enrollmentAdd() {
+        //$user = new User('nowy','uczeń');
+        $this->user = unserialize($_SESSION['user']);
+        //$this->user = SessionUtils::loadObject('user', $keep = false);
+        $this->form->student = App::getDB()->get("users", "user_id", [
+                    "username" => $this->user->login
+                ]);
+        $this->form->price = 0;
+        $this->form->status = 'niezatwierdzony';
         $this->form->course = ParamUtils::getFromCleanURL(1, true, 'Błędne wywołanie aplikacji');
-        $this->generateView();
-    }
-
-    public function action_courseSave() {
-
-        // 1. Walidacja danych formularza (z pobraniem)
-        if ($this->validateSave()) {
-            // 2. Zapis danych w bazie
-            try {
+        
+        try {
 
                 if ($this->form->id == '') {
 
-                        App::getDB()->insert("courses", [
-                            "name" => $this->form->name,
-                            "level" => $this->form->level,
-                            "start_date" => $this->form->startDate,
-                            "end_date" => $this->form->endDate,
-                            "user_id" => $this->form->teacher
+                        App::getDB()->insert("enrollments", [
+                            "status" => $this->form->status,
+                            "price" => $this->form->price,
+                            "user_id" => $this->form->student,
+                            "course_id" => $this->form->course,
+                           
                             ]);
-//                    } else { //za dużo rekordów
-//                        // Gdy za dużo rekordów to pozostań na stronie
-//                        Utils::addInfoMessage('Ograniczenie: Zbyt dużo rekordów. Aby dodać nowy usuń wybrany wpis.');
-//                        $this->generateView(); //pozostań na stronie edycji
-//                        exit(); //zakończ przetwarzanie, aby nie dodać wiadomości o pomyślnym zapisie danych
-//                    }
+
                 } else {
                     //2.2 Edycja rekordu o danym ID
-                    App::getDB()->update("courses", [
-                            "name" => $this->form->name,
-                            "level" => $this->form->level,
-                            "start_date" => $this->form->startDate,
-                            "end_date" => $this->form->endDate,
-                            "user_id" => $this->form->teacher
+                    App::getDB()->update("enrollments", [
+                            "status" => $this->form->status,
+                            "price" => $this->form->price,
+                            "user_id" => $this->form->student,
+                            "course_id" => $this->form->course,
                             ], [
-                        "course_id" => $this->form->id
+                        "enrollment_id" => $this->form->id
                     ]);
                 }
                 Utils::addInfoMessage('Pomyślnie zapisano rekord');
-            } catch (\PDOException $e) {
+        } catch (\PDOException $e) {
                 Utils::addErrorMessage('Wystąpił nieoczekiwany błąd podczas zapisu rekordu');
                 if (App::getConf()->debug)
                     Utils::addErrorMessage($e->getMessage());
-            }
-
-            // 3b. Po zapisie przejdź na stronę listy osób (w ramach tego samego żądania http)
-            App::getRouter()->forwardTo('courseList');
-        } else {
-            // 3c. Gdy błąd walidacji to pozostań na stronie
-            $this->generateView();
         }
+        App::getRouter()->redirectTo("home");
     }
+
+
     
-        public function action_courseDelete() {
+        public function action_enrollmentDelete() {
         
         if ($this->validateEdit()) {
 
             try {
                 // 2. usunięcie rekordu
-                App::getDB()->delete("courses", [
-                    "course_id" => $this->form->id
+                App::getDB()->delete("enrollments", [
+                    "enrollment_id" => $this->form->id
                 ]);
                 Utils::addInfoMessage('Pomyślnie usunięto rekord');
             } catch (\PDOException $e) {
@@ -138,25 +131,40 @@ class EnrollmentEditCtrl {
         }
 
         // 3. Przekierowanie na stronę listy osób
-        App::getRouter()->forwardTo('courseList');
+        App::getRouter()->forwardTo('home');
     }
     
-    public function action_courseEdit() {
-        // 1. walidacja id osoby do edycji
-        if ($this->validateEdit()) {
+//    public function action_courseEdit() {
+//        // 1. walidacja id osoby do edycji
+//        if ($this->validateEdit()) {
+//            try {
+//                // 2. odczyt z bazy danych osoby o podanym ID (tylko jednego rekordu)
+//                App::getDB()->update("enrollments",[
+//                    "status" => "OK"
+//                ]);
+//              
+//          
+//            } catch (\PDOException $e) {
+//                Utils::addErrorMessage('Wystąpił błąd podczas odczytu rekordu');
+//                if (App::getConf()->debug)
+//                    Utils::addErrorMessage($e->getMessage());
+//            }
+//        }
+//
+//        // 3. Wygenerowanie widoku
+//        $this->generateView();
+//    }
+    
+        public function action_enrollmentOK() {
+           
+            if ($this->validateEdit()) {
             try {
-                // 2. odczyt z bazy danych osoby o podanym ID (tylko jednego rekordu)
-                $record = App::getDB()->get("courses", "*", [
-                    "course_id" => $this->form->id
+                $newStatus = 'OK';
+                App::getDB()->update("enrollments",[
+                    "status" => $newStatus,
+                    ], ['enrollment_id' => $this->form->id
                 ]);
-                // 2.1 jeśli osoba istnieje to wpisz dane do obiektu formularza
-                $this->form->id = $record['course_id'];
-                $this->form->name = $record['name'];
-                $this->form->level = $record['level'];
-                $this->form->startDate = $record['start_date'];
-                $this->form->endDate = $record['end_date'];
-                $this->form->teacher = $record['user_id'];
-          
+      
             } catch (\PDOException $e) {
                 Utils::addErrorMessage('Wystąpił błąd podczas odczytu rekordu');
                 if (App::getConf()->debug)
@@ -164,8 +172,30 @@ class EnrollmentEditCtrl {
             }
         }
 
-        // 3. Wygenerowanie widoku
-        $this->generateView();
+        App::getRouter()->forwardTo('enrollmentTeacherList');
+    }
+    
+    public function action_priceSet() {
+            $id = ParamUtils::getFromCleanURL(1, true, 'Błędne2 wywołanie aplikacji');
+            $price = ParamUtils::getFromRequest('price', true, 'Błędne wywołanie aplikacji');
+            
+            try {
+                              
+                App::getDB()->update("enrollments",[
+                   
+                    "price" => $price
+                ], ['enrollment_id' => $id]);
+              
+          
+            } catch (\PDOException $e) {
+                Utils::addErrorMessage('Wystąpił błąd podczas odczytu rekordu');
+                if (App::getConf()->debug)
+                    Utils::addErrorMessage($e->getMessage());
+            }
+                     
+            
+            
+            App::getRouter()->forwardTo('enrollmentTeacherList');
     }
 
 public function generateView() {

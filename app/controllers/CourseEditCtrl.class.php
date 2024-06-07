@@ -49,17 +49,9 @@ class CourseEditCtrl {
         if (App::getMessages()->isError())
             return false;
 
-        // 2. sprawdzenie poprawności przekazanych parametrów
-
-//        $d = \DateTime::createFromFormat('Y-m-d', $this->form->birthdate);
-//        if ($d === false) {
-//            Utils::addErrorMessage('Zły format daty. Przykład: 2015-12-20');
-//        }
-
         return !App::getMessages()->isError();
     }
 
-    //validacja danych przed wyswietleniem do edycji
     public function validateEdit() {
 
         $this->form->id = ParamUtils::getFromCleanURL(1, true, 'Błędne wywołanie aplikacji');
@@ -67,15 +59,17 @@ class CourseEditCtrl {
     }   
     
     public function action_addCourse() {
-        $this->form->teacher = ParamUtils::getFromCleanURL(1, true, 'Błędne wywołanie aplikacji');
+        $username = ParamUtils::getFromCleanURL(1, true, 'Błędne wywołanie aplikacji');
+        $this->form->teacher = App::getDB()->get("users", "user_id", [
+                    "username" => $username
+                ]);
         $this->generateView();
     }
 
     public function action_courseSave() {
 
-        // 1. Walidacja danych formularza (z pobraniem)
-        if ($this->validateSave()) {
-            // 2. Zapis danych w bazie
+        if ($this->validateSave() ) {
+
             try {
 
                 if ($this->form->id == '') {
@@ -87,14 +81,9 @@ class CourseEditCtrl {
                             "end_date" => $this->form->endDate,
                             "user_id" => $this->form->teacher
                             ]);
-//                    } else { //za dużo rekordów
-//                        // Gdy za dużo rekordów to pozostań na stronie
-//                        Utils::addInfoMessage('Ograniczenie: Zbyt dużo rekordów. Aby dodać nowy usuń wybrany wpis.');
-//                        $this->generateView(); //pozostań na stronie edycji
-//                        exit(); //zakończ przetwarzanie, aby nie dodać wiadomości o pomyślnym zapisie danych
-//                    }
+
                 } else {
-                    //2.2 Edycja rekordu o danym ID
+         
                     App::getDB()->update("courses", [
                             "name" => $this->form->name,
                             "level" => $this->form->level,
@@ -112,10 +101,9 @@ class CourseEditCtrl {
                     Utils::addErrorMessage($e->getMessage());
             }
 
-            // 3b. Po zapisie przejdź na stronę listy osób (w ramach tego samego żądania http)
-            App::getRouter()->forwardTo('courseList');
+            App::getRouter()->forwardTo('home');
         } else {
-            // 3c. Gdy błąd walidacji to pozostań na stronie
+ 
             $this->generateView();
         }
     }
@@ -125,7 +113,7 @@ class CourseEditCtrl {
         if ($this->validateEdit()) {
 
             try {
-                // 2. usunięcie rekordu
+
                 App::getDB()->delete("courses", [
                     "course_id" => $this->form->id
                 ]);
@@ -137,19 +125,19 @@ class CourseEditCtrl {
             }
         }
 
-        // 3. Przekierowanie na stronę listy osób
+
         App::getRouter()->forwardTo('courseList');
     }
     
     public function action_courseEdit() {
-        // 1. walidacja id osoby do edycji
+
         if ($this->validateEdit()) {
             try {
-                // 2. odczyt z bazy danych osoby o podanym ID (tylko jednego rekordu)
+      
                 $record = App::getDB()->get("courses", "*", [
                     "course_id" => $this->form->id
                 ]);
-                // 2.1 jeśli osoba istnieje to wpisz dane do obiektu formularza
+    
                 $this->form->id = $record['course_id'];
                 $this->form->name = $record['name'];
                 $this->form->level = $record['level'];
@@ -164,14 +152,13 @@ class CourseEditCtrl {
             }
         }
 
-        // 3. Wygenerowanie widoku
         $this->generateView();
     }
 
 public function generateView() {
         App::getSmarty()->assign('form', $this->form); // dane formularza dla widoku
         App::getSmarty()->assign('user',unserialize($_SESSION['user']));
-        //App::getSmarty()->assign('form',unserialize($_SESSION['form']));
+
         App::getSmarty()->display('CourseEdit.tpl');
     }
 

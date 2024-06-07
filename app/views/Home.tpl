@@ -60,6 +60,7 @@
                     <a href="{$conf->action_root}personList" class="pure-menu-link">Lista</a>
                 </li>*}
                 <li class="pure-menu-item"><a href="{$conf->action_root}courseList" class="pure-menu-link">Lista kursów</a></li>
+                <li class="pure-menu-item"><a href="{$conf->action_root}enrollmentStudentList" class="pure-menu-link">Moje kursy</a></li>
             </ul>
         </div>
     </div>
@@ -82,13 +83,8 @@
 
             <ul class="pure-menu-list">
                 
-                <li class="pure-menu-item"><a href="{$conf->action_root}courseList/{$user->login}" class="pure-menu-link">Moje propozycje</a></li>
-                {*<li class="pure-menu-item"><a href="{$conf->action_root}studentList" class="pure-menu-link">Kursanci</a></li>
-                <li class="pure-menu-item"><a href="{$conf->action_root}personList"" class="pure-menu-link">Lista wszystkich</a></li>*}
-{*                <li class="pure-menu-item menu-item-divided pure-menu-selected">
-                    <a href="{$conf->action_root}personList" class="pure-menu-link">Lista</a>
-                </li>*}
-{*                <li class="pure-menu-item"><a href="{$conf->action_root}courseList" class="pure-menu-link">Lista kursów</a></li>*}
+                <li class="pure-menu-item"><a href="{$conf->action_root}courseTeacherList/{$user->login}" class="pure-menu-link">Moje propozycje</a></li>
+                <li class="pure-menu-item"><a href="{$conf->action_root}enrollmentTeacherList/{$user->login}" class="pure-menu-link">Moje szkolenia</
             </ul>
         </div>
     </div>

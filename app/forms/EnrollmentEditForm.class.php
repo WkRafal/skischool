@@ -4,8 +4,8 @@ namespace app\forms;
 
 class EnrollmentEditForm {
 	public $id;
-	public $data;
-        public $price;
+	public $price;
+        public $status;
         public $course;
         public $student;
 
