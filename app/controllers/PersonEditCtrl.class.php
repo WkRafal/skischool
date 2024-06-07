@@ -59,20 +59,12 @@ class PersonEditCtrl {
         if (App::getMessages()->isError())
             return false;
 
-        // 2. sprawdzenie poprawności przekazanych parametrów
-
-//        $d = \DateTime::createFromFormat('Y-m-d', $this->form->birthdate);
-//        if ($d === false) {
-//            Utils::addErrorMessage('Zły format daty. Przykład: 2015-12-20');
-//        }
-
         return !App::getMessages()->isError();
     }
 
     //validacja danych przed wyswietleniem do edycji
     public function validateEdit() {
-        //pobierz parametry na potrzeby wyswietlenia danych do edycji
-        //z widoku listy osób (parametr jest wymagany)
+
         $this->form->id = ParamUtils::getFromCleanURL(1, true, 'Błędne wywołanie aplikacji');
         return !App::getMessages()->isError();
     }
@@ -82,8 +74,7 @@ class PersonEditCtrl {
     }
     
     public function action_registerPerson() {
-        //SessionUtils::loadObject('form', $keep = false);
-        //App::getSmarty()->assign('form', $this->form);
+
         App::getSmarty()->assign('user',unserialize($_SESSION['user']));
         App::getSmarty()->assign('form',unserialize($_SESSION['form']));
         App::getSmarty()->display('PersonEdit.tpl');
@@ -151,9 +142,7 @@ class PersonEditCtrl {
 
                 //2.1 Nowy rekord
                 if ($this->form->id == '') {
-                    //sprawdź liczebność rekordów - nie pozwalaj przekroczyć 20
-//                    $count = App::getDB()->count("users");
-//                    if ($count <= 20) {
+
                         App::getDB()->insert("users", [
                             "first_name" => $this->form->firstName,
                             "last_name" => $this->form->lastName,
@@ -163,12 +152,6 @@ class PersonEditCtrl {
                             "email" => $this->form->email,
                             "phone" => $this->form->phone
                         ]);
-//                    } else { //za dużo rekordów
-//                        // Gdy za dużo rekordów to pozostań na stronie
-//                        Utils::addInfoMessage('Ograniczenie: Zbyt dużo rekordów. Aby dodać nowy usuń wybrany wpis.');
-//                        $this->generateView(); //pozostań na stronie edycji
-//                        exit(); //zakończ przetwarzanie, aby nie dodać wiadomości o pomyślnym zapisie danych
-//                    }
                 } else {
                     //2.2 Edycja rekordu o danym ID
                     App::getDB()->update("users", [

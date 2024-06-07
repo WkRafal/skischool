@@ -17,13 +17,11 @@ class EnrollmentEditCtrl {
     private $user;
 
     public function __construct() {
-        //stworzenie potrzebnych obiektów
+        
         $this->form = new EnrollmentEditForm();
         $this->user = new User();
     }
-    
-
-    // Walidacja danych przed zapisem (nowe dane lub edycja).
+ 
     public function validateSave() {
         //0. Pobranie parametrów z walidacją
         $this->form->id = ParamUtils::getFromRequest('id', true, 'Błędne wywołanie aplikacji');
@@ -51,12 +49,6 @@ class EnrollmentEditCtrl {
         if (App::getMessages()->isError())
             return false;
 
-        // 2. sprawdzenie poprawności przekazanych parametrów
-
-//        $d = \DateTime::createFromFormat('Y-m-d', $this->form->birthdate);
-//        if ($d === false) {
-//            Utils::addErrorMessage('Zły format daty. Przykład: 2015-12-20');
-//        }
 
         return !App::getMessages()->isError();
     }
@@ -133,27 +125,7 @@ class EnrollmentEditCtrl {
         // 3. Przekierowanie na stronę listy osób
         App::getRouter()->forwardTo('home');
     }
-    
-//    public function action_courseEdit() {
-//        // 1. walidacja id osoby do edycji
-//        if ($this->validateEdit()) {
-//            try {
-//                // 2. odczyt z bazy danych osoby o podanym ID (tylko jednego rekordu)
-//                App::getDB()->update("enrollments",[
-//                    "status" => "OK"
-//                ]);
-//              
-//          
-//            } catch (\PDOException $e) {
-//                Utils::addErrorMessage('Wystąpił błąd podczas odczytu rekordu');
-//                if (App::getConf()->debug)
-//                    Utils::addErrorMessage($e->getMessage());
-//            }
-//        }
-//
-//        // 3. Wygenerowanie widoku
-//        $this->generateView();
-//    }
+
     
         public function action_enrollmentOK() {
            

@@ -67,14 +67,7 @@ class EnrollmentListCtrl {
                 Utils::addErrorMessage($e->getMessage());
         }
 
-        // 4. wygeneruj widok
-         App::getSmarty()->assign('page_header','Moje kursy');
-         App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
-        
-        App::getSmarty()->assign('searchForm', $this->form); // dane formularza (wyszukiwania w tym wypadku)
-        App::getSmarty()->assign('enrollments', $this->records);  // lista rekordów z bazy danych
-        App::getSmarty()->assign('user',unserialize($_SESSION['user']));
-        App::getSmarty()->display('EnrollmentList.tpl');
+        $this->generateView();
     }
     
     public function action_enrollmentTeacherList() {
@@ -117,9 +110,12 @@ class EnrollmentListCtrl {
                 Utils::addErrorMessage($e->getMessage());
         }
 
-        // 4. wygeneruj widok
-         App::getSmarty()->assign('page_header','Moje kursy');
-         App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
+        $this->generateView();
+    }
+    
+    public function generateView() {
+        App::getSmarty()->assign('page_header','Moje kursy');
+        App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
         
         App::getSmarty()->assign('searchForm', $this->form); // dane formularza (wyszukiwania w tym wypadku)
         App::getSmarty()->assign('enrollments', $this->records);  // lista rekordów z bazy danych

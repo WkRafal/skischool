@@ -3,9 +3,6 @@
 namespace app\controllers;
 
 use core\App;
-use core\Utils;
-use core\ParamUtils;
-use core\Validator;
 use app\forms\PersonEditForm;
 
 class HomeCtrl {
