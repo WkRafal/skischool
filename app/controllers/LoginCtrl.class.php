@@ -76,13 +76,14 @@ class LoginCtrl {
         if ($this->validate()) {
             //zalogowany => przekieruj na główną akcję (z przekazaniem messages przez sesję)
             Utils::addErrorMessage('Poprawnie zalogowano do systemu');
-            if (RoleUtils::inRole('admin')){
-                App::getRouter()->redirectTo("adminHome");
-            } else if (RoleUtils::inRole('uczeń')) {
-                App::getRouter()->redirectTo("studentHome");
-            } else  {
-                App::getRouter()->redirectTo("studentHome");
-            }
+
+//            if (RoleUtils::inRole('admin')){
+               App::getRouter()->redirectTo("home");
+//            } else if (RoleUtils::inRole('uczeń')) {
+//                App::getRouter()->redirectTo("studentHome");
+//            } else  {
+//                App::getRouter()->redirectTo("studentHome");
+//            }
         } else {
             //niezalogowany => pozostań na stronie logowania
             $this->generateView();
@@ -98,7 +99,7 @@ class LoginCtrl {
 
     public function generateView() {
         
-        App::getSmarty()->assign('page_description','Dodano routing');
+        
         App::getSmarty()->assign('page_header','Logowanie');
         
         

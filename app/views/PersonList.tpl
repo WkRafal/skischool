@@ -22,14 +22,8 @@
             <a class="pure-menu-heading" href="#company">SKI School</a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item"><a href="{$conf->action_url}adminHome" class="pure-menu-link">Home</a></li>
-                <li class="pure-menu-item"><a href="#about" class="pure-menu-link">About</a></li>
+                <li class="pure-menu-item"><a href="{$conf->action_url}home" class="pure-menu-link">Home</a></li>
 
-                <li class="pure-menu-item menu-item-divided pure-menu-selected">
-                    <a href="{$conf->action_root}personList" class="pure-menu-link">Lista</a>
-                </li>
-
-                <li class="pure-menu-item"><a href="#contact" class="pure-menu-link">Contact</a></li>
             </ul>
         </div>
     </div>

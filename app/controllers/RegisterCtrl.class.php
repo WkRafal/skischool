@@ -101,12 +101,10 @@ public function validate() {
 
     public function generateView() {
         
-        App::getSmarty()->assign('page_description','Dodano routing');
-        App::getSmarty()->assign('page_header','Rejstracja');
-        
+        App::getSmarty()->assign('page_header','Zarejstruj się');
+        App::getSmarty()->assign('page_title','Rejstracja');
         
         App::getSmarty()->assign('user',unserialize($_SESSION['user']));
-        App::getSmarty()->assign('page_title','Rejstracja');
         App::getSmarty()->assign('form', $this->form); // dane formularza do widoku
         App::getSmarty()->display('RegisterView.tpl');
     }

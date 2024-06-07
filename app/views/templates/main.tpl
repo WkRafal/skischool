@@ -37,17 +37,17 @@
     
  <div class="header">
     
-	<h1>{$page_title|default:"Tytuł domyślny"}</h1>
-	<h2>{$page_header|default:"Tytuł domyślny"}</h1>
+	<h1>{$page_title|default:""}</h1>
+	<h2>{$page_header|default:""}</h1>
 	<p>
-		{$page_description|default:"Opis domyślny"}
+		{$page_description|default:""}
 	</p>
 </div>
 
 {block name=top} {/block}
 
 <div class="content">
-{block name=content} Domyślna treść zawartości .... {/block}
+{block name=content} {/block}
 </div><!-- content -->
 
 {block name=messages}
