@@ -82,15 +82,20 @@ public function validate() {
 
         if ($this->validate()) {
             
-            $user = new User($this->form->userName,'uczeń');
+            $user = new User();
+            $user->login = $this->form->userName;
+            $user->role = 'uczeń';
             $_SESSION['user'] = serialize($user);
             RoleUtils::addRole($user->role);
        
             $this->form->role = $user->role;
             Utils::addErrorMessage('Jesteś zarejstrowany uzupełnij dane');
             $_SESSION['form'] = serialize($this->form);
+            
+            App::getSmarty()->assign('page_header','Zarejstruj się');
+            App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
             App::getRouter()->redirectTo("registerPerson");
-            //App::getSmarty()->display('PersonEdit.tpl');
+
         } else {
             
             $this->generateView();
@@ -102,7 +107,7 @@ public function validate() {
     public function generateView() {
         
         App::getSmarty()->assign('page_header','Zarejstruj się');
-        App::getSmarty()->assign('page_title','Rejstracja');
+        App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
         
         App::getSmarty()->assign('user',unserialize($_SESSION['user']));
         App::getSmarty()->assign('form', $this->form); // dane formularza do widoku

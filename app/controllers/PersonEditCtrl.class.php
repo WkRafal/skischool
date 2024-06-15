@@ -10,16 +10,15 @@ use app\forms\PersonEditForm;
 
 class PersonEditCtrl {
 
-    private $form; //dane formularza
+    private $form; 
 
     public function __construct() {
-        //stworzenie potrzebnych obiektów
+
         $this->form = new PersonEditForm();
     }
 
-    // Walidacja danych przed zapisem (nowe dane lub edycja).
     public function validateSave() {
-        //0. Pobranie parametrów z walidacją
+
         $this->form->id = ParamUtils::getFromRequest('id', true, 'Błędne wywołanie aplikacji');
         $this->form->firstName = ParamUtils::getFromRequest('firstName', true, 'Błędne wywołanie aplikacji');
         $this->form->lastName = ParamUtils::getFromRequest('lastName', true, 'Błędne wywołanie aplikacji');
@@ -40,13 +39,13 @@ class PersonEditCtrl {
         if (empty(trim($this->form->lastName))) {
             Utils::addErrorMessage('Wprowadź nazwisko');
         }
-                if (empty(trim($this->form->userName))) {
+        if (empty(trim($this->form->userName))) {
             Utils::addErrorMessage('Wprowadź login');
         }
-                if (empty(trim($this->form->password))) {
+        if (empty(trim($this->form->password))) {
             Utils::addErrorMessage('Wprowadź hasło');
         }
-                if (empty(trim($this->form->role))) {
+        if (empty(trim($this->form->role))) {
             Utils::addErrorMessage('Wprowadź role');
         }
         if (empty(trim($this->form->email))) {
@@ -55,14 +54,27 @@ class PersonEditCtrl {
         if (empty(trim($this->form->phone))) {
             Utils::addErrorMessage('Wprowadź telefon');
         }
-
+        $v = new Validator();
+        $this->form->email = $v->validateFromRequest("email", [
+            'email' => true,
+            'validator_message' => 'Błędny email',
+        ]);
+        
+        $this->form->phone = $v->validateFromRequest("phone", [
+            'int' => true,
+            'required_message' => 'nr musi być cyframi',
+            'min_length' => 9,
+            'max_length' => 12,
+            'validator_message' => 'Nr telefonu powinien mieścić się pomiędzy 9 a 12 znakami',
+        ]);
+        
         if (App::getMessages()->isError())
             return false;
 
         return !App::getMessages()->isError();
     }
 
-    //validacja danych przed wyswietleniem do edycji
+  
     public function validateEdit() {
 
         $this->form->id = ParamUtils::getFromCleanURL(1, true, 'Błędne wywołanie aplikacji');
@@ -77,19 +89,21 @@ class PersonEditCtrl {
 
         App::getSmarty()->assign('user',unserialize($_SESSION['user']));
         App::getSmarty()->assign('form',unserialize($_SESSION['form']));
+        
+        App::getSmarty()->assign('page_header','Zarejstruj się');
+        App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
         App::getSmarty()->display('PersonEdit.tpl');
     }    
 
-    //wysiweltenie rekordu do edycji wskazanego parametrem 'id'
     public function action_personEdit() {
-        // 1. walidacja id osoby do edycji
+
         if ($this->validateEdit()) {
             try {
-                // 2. odczyt z bazy danych osoby o podanym ID (tylko jednego rekordu)
+
                 $record = App::getDB()->get("users", "*", [
                     "user_id" => $this->form->id
                 ]);
-                // 2.1 jeśli osoba istnieje to wpisz dane do obiektu formularza
+        
                 $this->form->id = $record['user_id'];
                 $this->form->firstName = $record['first_name'];
                 $this->form->lastName = $record['last_name'];
@@ -106,7 +120,6 @@ class PersonEditCtrl {
             }
         }
 
-        // 3. Wygenerowanie widoku
         $this->generateView();
     }
     
@@ -140,7 +153,7 @@ class PersonEditCtrl {
             // 2. Zapis danych w bazie
             try {
 
-                //2.1 Nowy rekord
+  
                 if ($this->form->id == '') {
 
                         App::getDB()->insert("users", [
@@ -172,16 +185,20 @@ class PersonEditCtrl {
                 if (App::getConf()->debug)
                     Utils::addErrorMessage($e->getMessage());
             }
-
-            // 3b. Po zapisie przejdź na stronę listy osób (w ramach tego samego żądania http)
-            App::getRouter()->forwardTo('personList');
+            
+         App::getSmarty()->assign('page_header','Rejstracja');
+         App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
+            App::getRouter()->forwardTo('home');
         } else {
-            // 3c. Gdy błąd walidacji to pozostań na stronie
+
             $this->generateView();
         }
     }
 
     public function generateView() {
+         App::getSmarty()->assign('page_header','Rejstracja');
+         App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
+        
         App::getSmarty()->assign('form', $this->form); // dane formularza dla widoku
         App::getSmarty()->assign('user',unserialize($_SESSION['user']));
         //App::getSmarty()->assign('form',unserialize($_SESSION['form']));

@@ -66,6 +66,66 @@ class PersonListCtrl {
         $this->generateView();
     }
     
+//    public function action_personList() {
+//
+//        $this->validate();
+//        
+//        
+//        // Parametry stronicowania
+//        $items_per_page = 10;
+//        
+////        if (ParamUtils::getFromCleanURL('page',false,"błąd1") != '') {
+////            $page = ParamUtils::getFromCleanURL('page',true,"błąd2");
+////        } else {
+////            $page = 1;
+////        }
+//        
+//        //$page = isset(ParamUtils::getFromGet('page')) ? ParamUtils::getFromGet('page') : 1;
+//        $page = ParamUtils::getFromCleanURL('page') ?? 1;
+//        $offset = ($page - 1) * $items_per_page;
+//
+//        $search_params = []; 
+//        if (isset($this->form->surname) && strlen($this->form->surname) > 0) {
+//            $search_params['last_name[~]'] = $this->form->surname . '%'; 
+//        }
+//        
+//        $num_params = sizeof($search_params);
+//        if ($num_params > 1) {
+//            $where = ["AND" => &$search_params];
+//        } else {
+//            $where = &$search_params;
+//        }
+//        //dodanie frazy sortującej po nazwisku
+//        $where ["ORDER"] = "last_name";
+//        //wykonanie zapytania
+//        $where ['LIMIT'] = [$offset, $items_per_page];
+//        try {
+//            $this->records = App::getDB()->select("users", [
+//                "user_id",
+//                "username",
+//                "role",
+//                "first_name",
+//                "last_name",
+//                "email",
+//                "phone",
+//                    ],$where );
+//        } catch (\PDOException $e) {
+//            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+//            if (App::getConf()->debug)
+//                Utils::addErrorMessage($e->getMessage());
+//        }
+//        
+//        // Pobieranie całkowitej liczby użytkowników
+//        $total_users = App::getDB()->count('users');
+//        // Obliczanie całkowitej liczby stron
+//        $total_pages = ceil($total_users / $items_per_page); 
+//        
+//        App::getSmarty()->assign('total_pages', $total_pages);
+//         App::getSmarty()->assign('page', $page);
+//        
+//         $this->generateView();
+//    }
+//    
     public function action_teacherList() {
 
         $this->validate();

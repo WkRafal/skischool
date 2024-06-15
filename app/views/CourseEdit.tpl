@@ -1,5 +1,21 @@
 {extends file="main.tpl"}
 
+{block name=border}
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div class="pure-menu">
+            <a class="pure-menu-heading" href="#company">SKI School</a>
+
+        </div>
+    </div>
+
+{/block}
 
 {block name=content}
 
@@ -7,7 +23,7 @@
 <form action="{$conf->action_root}courseSave" method="post" class="pure-form pure-form-aligned">
 	<fieldset>
 		<legend>Dane kursu</legend>
-        </div>
+        
                 <div class="pure-control-group">
                 <label for="nazwa">Wybierz lekcje:</label>
                 <select id="nazwa" name="nazwa">
@@ -26,11 +42,11 @@
         </div>
 		<div class="pure-control-group">
             <label for="startDate">początek</label>
-            <input id="startDate" type="text" placeholder="yyyy-mm-dd" name="startDate" value="{$form->startDate}">
+            <input id="startDate" type="date" placeholder="yyyy-mm-dd" name="startDate" value="{$form->startDate}">
         </div>
                 <div class="pure-control-group">
             <label for="endDate">koniec</label>
-            <input id="endDate" type="text" placeholder="yyyy-mm-dd" name="endDate" value="{$form->endDate}">
+            <input id="endDate" type="date" placeholder="yyyy-mm-dd" name="endDate" value="{$form->endDate}">
         </div>
 {*              <div class="pure-control-group">
             <label for="teacher">nauczyciel</label>

@@ -15,9 +15,9 @@ class LoginCtrl {
     private $records;
 
     public function __construct() {
-        //stworzenie potrzebnych obiektów
+
         $this->form = new LoginForm();
-        //$this->records = new PersonEditForm();
+
     }
 
     public function validate() {
@@ -78,18 +78,13 @@ class LoginCtrl {
 
     public function action_login() {
         if ($this->validate()) {
-            //zalogowany => przekieruj na główną akcję (z przekazaniem messages przez sesję)
+
             Utils::addErrorMessage('Poprawnie zalogowano do systemu');
 
-//            if (RoleUtils::inRole('admin')){
                App::getRouter()->redirectTo("home");
-//            } else if (RoleUtils::inRole('uczeń')) {
-//                App::getRouter()->redirectTo("studentHome");
-//            } else  {
-//                App::getRouter()->redirectTo("studentHome");
-//            }
+
         } else {
-            //niezalogowany => pozostań na stronie logowania
+
             $this->generateView();
         }
     }
@@ -103,9 +98,9 @@ class LoginCtrl {
 
     public function generateView() {
         
-        App::getSmarty()->assign('page_header','Logowanie');
+        App::getSmarty()->assign('page_header','Strona logowania');
       
-        App::getSmarty()->assign('page_title','Strona logowania');
+        App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
         App::getSmarty()->assign('form', $this->form); // dane formularza do widoku
         App::getSmarty()->display('LoginView.tpl');
     }

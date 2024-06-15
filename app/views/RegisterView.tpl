@@ -1,5 +1,24 @@
 {extends file="main.tpl"}
 
+
+
+{block name=border}
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div class="pure-menu">
+            <a class="pure-menu-heading" href="#company">SKI School</a>
+
+        </div>
+    </div>
+
+{/block}
+
 {block name=content}
     
 

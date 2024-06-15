@@ -9,6 +9,23 @@
     
 {/block}
 
+{block name=border}
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div class="pure-menu">
+            <a class="pure-menu-heading" href="#company">SKI School</a>
+
+        </div>
+    </div>
+
+{/block}
+
 {block name=content}
 
 <div class="bottom-margin">
@@ -23,27 +40,38 @@
             <label for="lastName">nazwisko</label>
             <input id="lastName" type="text" placeholder="nazwisko" name="lastName" value="{$form->lastName}">
         </div>
-		<div class="pure-control-group">
+        {if $user->role == 'admin'}
+            <div class="pure-control-group">
             <label for="userName">login</label>
             <input id="userName" type="text" placeholder="login" name="userName" value="{$form->userName}">
         </div>
-        {if $user->role == 'admin'}
                 <div class="pure-control-group">
                 <label for="role">Wybierz role:</label>
                 <select id="role" name="role">
                 <option value="admin">admin</option>
                 <option value="uczeń">uczeń</option>
                 <option value="instruktor">instruktor</option>
-                </select>
+                </select>   
         </div>
-        {else}
-            <input type="hidden" name="role" value="{$form->role}">
-        {/if}
-                <div class="pure-control-group">
+            <div class="pure-control-group">
             <label for="password">hasło</label>
             <input id="password" type="text" placeholder="hasło" name="password" value="{$form->password}">
         </div>
+        {else}
+            <div class="pure-control-group">
+            <label for="userName">login</label>
+            <input id="userName" type="text"  name="userName" value="{$form->userName}" readonly>
+        </div>
                 <div class="pure-control-group">
+                <label for="role">Wybierz role:</label>
+                <input type="text" name="role" value="{$form->role}" readonly>
+        </div>
+            <div class="pure-control-group">
+            <label for="password">hasło</label>
+            <input id="password" type="text" name="password" value="{$form->password}" readonly>
+        </div>            
+        {/if}    
+            <div class="pure-control-group">
             <label for="email">email</label>
             <input id="email" type="text" placeholder="email" name="email" value="{$form->email}">
         </div>

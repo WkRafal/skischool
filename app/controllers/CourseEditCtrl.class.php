@@ -20,7 +20,8 @@ class CourseEditCtrl {
         $this->formP = new PersonEditForm();
     }
 
-    // Walidacja danych przed zapisem (nowe dane lub edycja).
+        
+    
     public function validateSave() {
         //0. Pobranie parametrów z walidacją
         $this->form->id = ParamUtils::getFromRequest('id', true, 'Błędne wywołanie aplikacji');
@@ -46,6 +47,8 @@ class CourseEditCtrl {
         if (empty(trim($this->form->endDate))) {
             Utils::addErrorMessage('Wprowadź datę zakończenia');
         }
+        
+       
         if (App::getMessages()->isError())
             return false;
 
@@ -156,10 +159,12 @@ class CourseEditCtrl {
     }
 
 public function generateView() {
-        App::getSmarty()->assign('form', $this->form); // dane formularza dla widoku
-        App::getSmarty()->assign('user',unserialize($_SESSION['user']));
-
-        App::getSmarty()->display('CourseEdit.tpl');
+    App::getSmarty()->assign('page_header','Dodanie kursu');
+    App::getSmarty()->assign('page_title','Szkoła Sportów zimowych');
+    
+    App::getSmarty()->assign('form', $this->form); 
+    App::getSmarty()->assign('user',unserialize($_SESSION['user']));
+    App::getSmarty()->display('CourseEdit.tpl');
     }
 
 }
